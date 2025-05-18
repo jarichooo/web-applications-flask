@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Check</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h1>Stock Control</h1>
+        <a href="{{ url_for('updateQuantityOlevel') }}">
+            <button style="padding: 8px 16px; font-size: 14px;">Update Inventory</button>
+        </a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Reorder Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.type }}</td>
+                <td>₱{{ item.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.reorderLevel }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="{{ url_for('index') }}">← Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Drug</title>
+</head>
+<body>
+    <h2>Add New Drug</h2>
+    <form method="POST">
+        <label>Drug Name:</label><br>
+        <input type="text" id="drugName" name="drugName" required><br><br>
+
+        <label>Type:</label><br>
+        <input type="text" id="drugType" name="drugType"><br><br>
+
+        <label>Description:</label><br>
+        <textarea name="description" id="description"></textarea><br><br>
+
+        <label>Manufacturer:</label><br>
+        <input type="text" id="manufacturer" name="manufacturer"><br><br>
+
+        <label>Unit Price:</label><br>
+        <input type="number" id="unitPrice" step="0.01" name="unitPrice"><br><br>
+
+        <label>Expiry Date:</label><br>
+        <input type="date" id="expiryDate" name="expiryDate"><br><br>
+
+        <button type="submit">Add Drug</button>
+    </form>
+    <br>
+    <a href="{{ url_for('index') }}">← Back to Home</a>
+</body>
+</html>
