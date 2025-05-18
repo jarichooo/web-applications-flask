@@ -89,14 +89,20 @@ def update_inventory(inventoryId, quantity, reorderLevel, unitPrice):
                     "success": False,
                     "message": f"Inventory record with ID {inventoryId} does not exist."
                 }
+            # Initialize updated flags
+            quantity_updated = 0
+            reorder_updated = 0
+            unitPrice_updated = 0
             
             # Update quantity
-            cursor.execute("UPDATE inventory SET quantity = %s WHERE inventoryId = %s", (quantity, inventoryId))
-            quantity_updated = cursor.rowcount
+            if quantity is not None:
+                cursor.execute("UPDATE inventory SET quantity = %s WHERE inventoryId = %s", (quantity, inventoryId))
+                quantity_updated = cursor.rowcount
 
             # Update reorder level
-            cursor.execute("UPDATE inventory SET reorderLevel = %s WHERE inventoryId = %s", (reorderLevel, inventoryId))
-            reorder_updated = cursor.rowcount
+            if reorderLevel is not None:
+                cursor.execute("UPDATE inventory SET reorderLevel = %s WHERE inventoryId = %s", (reorderLevel, inventoryId))
+                reorder_updated = cursor.rowcount
 
             # Update Unit price
             if unitPrice is not None:                
@@ -133,10 +139,15 @@ def addDrugs(drugName, drugType, description, manufacturer, unitPrice, expiryDat
             cursor.execute("""INSERT INTO drugs (drugName, drugType, description, manufacturer, unitPrice, expiryDate)
                 VALUES (%s, %s, %s, %s, %s, %s) """, (drugName, drugType, description, manufacturer, unitPrice, expiryDate))
             connection.commit()
+
+            drugId = cursor.lastrowid
+            cursor.execute("INSERT INTO inventory (drugId, quantity, reorderLevel) VALUES (%s, %s, %s)", (drugId, 0, 10))
+            connection.commit()
             return {
                 "success": True,
                 "message": "Drug added successfully."
             }
+        
     except Error as e:
         return {
             "success": False,

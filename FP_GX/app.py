@@ -19,7 +19,11 @@ def updateQuantityOlevel():
      # Get data from the form
     inventoryId = request.form.get('inventoryId')
     quantity = request.form.get('quantity')
+    quantity = quantity if quantity else None
+
     reorderLevel = request.form.get('reorderLevel')
+    reorderLevel = reorderLevel if reorderLevel else None
+
     unitPrice = request.form.get('unitPrice')
     unitPrice = unitPrice if unitPrice else None
 
