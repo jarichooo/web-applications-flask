@@ -13,6 +13,7 @@ def inventory():
     return render_template("inventory.html", items=items)
 
 @app.route("/updateQuantityOlevel", methods=['GET', 'POST'])
+
 def updateQuantityOlevel():
     control = None
 
@@ -32,6 +33,7 @@ def updateQuantityOlevel():
     return render_template("updateQuantityOlevel.html", control=control)
 
 @app.route('/addDrug', methods=['GET', 'POST'])
+
 def addDrug():
     if request.method == 'POST':
         drugName = request.form.get('drugName')

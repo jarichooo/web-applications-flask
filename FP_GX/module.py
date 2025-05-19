@@ -82,13 +82,6 @@ def update_inventory(inventoryId, quantity, reorderLevel, unitPrice):
         if connection:
             cursor = connection.cursor()
             
-            # Check if inventory record exists
-            cursor.execute("SELECT inventoryId FROM inventory WHERE inventoryId = %s", (inventoryId,))
-            if not cursor.fetchone():
-                return {
-                    "success": False,
-                    "message": f"Inventory record with ID {inventoryId} does not exist."
-                }
             # Initialize updated flags
             quantity_updated = 0
             reorder_updated = 0
@@ -104,14 +97,14 @@ def update_inventory(inventoryId, quantity, reorderLevel, unitPrice):
                 cursor.execute("UPDATE inventory SET reorderLevel = %s WHERE inventoryId = %s", (reorderLevel, inventoryId))
                 reorder_updated = cursor.rowcount
 
-            # Update Unit price
-            if unitPrice is not None:                
+            # Update Unit price in the drugs table
+            if unitPrice is not None:
                 cursor.execute("UPDATE drugs SET unitPrice = %s WHERE drugId = %s", (unitPrice, inventoryId))
                 unitPrice_updated = cursor.rowcount
 
             connection.commit()
 
-            if quantity_updated > 0 or reorder_updated > 0 or (unitPrice is not None and unitPrice_updated > 0) :
+            if quantity_updated > 0 or reorder_updated > 0 or unitPrice_updated > 0:
                 return {
                     "success": True,
                     "message": "Inventory updated successfully."
@@ -136,18 +129,27 @@ def addDrugs(drugName, drugType, description, manufacturer, unitPrice, expiryDat
         connection = create_connection()
         if connection:
             cursor = connection.cursor()
-            cursor.execute("""INSERT INTO drugs (drugName, drugType, description, manufacturer, unitPrice, expiryDate)
-                VALUES (%s, %s, %s, %s, %s, %s) """, (drugName, drugType, description, manufacturer, unitPrice, expiryDate))
+            
+            cursor.execute("SELECT COUNT(*) FROM drugs")
+            count = cursor.fetchone()[0]
+            
+            new_drugId = count + 1
+            
+            # Insert the new drug with the manually set drugId
+            cursor.execute("""INSERT INTO drugs (drugId, drugName, drugType, description, manufacturer, unitPrice, expiryDate)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+                (new_drugId, drugName, drugType, description, manufacturer, unitPrice, expiryDate))
             connection.commit()
 
-            drugId = cursor.lastrowid
-            cursor.execute("INSERT INTO inventory (drugId, quantity, reorderLevel) VALUES (%s, %s, %s)", (drugId, 0, 10))
+            # Insert initial inventory record for the new drug
+            cursor.execute("INSERT INTO inventory (inventoryId, quantity, reorderLevel) VALUES (%s, %s, %s)", (new_drugId, 0, 10))
             connection.commit()
+            
             return {
                 "success": True,
-                "message": "Drug added successfully."
+                "message": "Drug added successfully with drugId " + str(new_drugId)
             }
-        
+
     except Error as e:
         return {
             "success": False,
@@ -156,6 +158,7 @@ def addDrugs(drugName, drugType, description, manufacturer, unitPrice, expiryDat
     finally:
         if connection:
             connection.close()
+
 
 
 def delete_record(drugId):
