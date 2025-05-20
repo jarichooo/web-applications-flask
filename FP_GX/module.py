@@ -161,7 +161,7 @@ def addDrugs(drugName, drugType, description, manufacturer, unitPrice, expiryDat
 
 
 
-def delete_record(drugId):
+def eradicateDrugs(drugId):
     try:
         connection = create_connection()
         if connection:
