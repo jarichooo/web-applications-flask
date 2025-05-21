@@ -159,32 +159,32 @@ def addDrugs(drugName, drugType, description, manufacturer, unitPrice, expiryDat
         if connection:
             connection.close()
 
-
-
-def eradicateDrugs(drugId):
+def eradicateDrugs(drugIds):
     try:
         connection = create_connection()
         if connection:
             cursor = connection.cursor()
             
-            # Check if inventory record exists
-            cursor.execute("SELECT drugId FROM drugs WHERE drugId = %s", (drugId,))
-            if not cursor.fetchone():
-                return {
-                    "success": False,
-                    "message": f"Inventory record with ID {drugId} does not exist."
-                }
-            
-            # Update quantity
-            cursor.execute("UPDATE drugs SET unitPrice = %s WHERE inventoryId = %s", (drugId, ))
-            quantity_updated = cursor.rowcount
+            format_strings = ','.join(['%s'] * len(drugIds))
+            query = f"DELETE FROM inventory WHERE inventoryID IN ({format_strings})"
+            cursor.execute(query, tuple(drugIds))
             connection.commit()
-    
-    
+
+            # Use SQL IN clause to delete multiple records
+            format_strings = ','.join(['%s'] * len(drugIds))
+            query = f"DELETE FROM drugs WHERE drugId IN ({format_strings})"
+            cursor.execute(query, tuple(drugIds))
+            connection.commit()
+
+            return {
+                "success": True,
+                "message": f"Deleted {cursor.rowcount} drug(s) with IDs: {', '.join(drugIds)}"
+            }
+
     except Error as e:
         return {
             "success": False,
-            "message": f"Error updating inventory: {e}"
+            "message": f"Error deleting inventory: {e}"
         }
     finally:
         if connection:

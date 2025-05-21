@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from module import fetch_drugs, checkInventory, update_inventory, addDrugs
+from module import fetch_drugs, checkInventory, update_inventory, addDrugs, eradicateDrugs  
 app = Flask(__name__)
 
 @app.route("/")
@@ -13,7 +13,6 @@ def inventory():
     return render_template("inventory.html", items=items)
 
 @app.route("/updateQuantityOlevel", methods=['GET', 'POST'])
-
 def updateQuantityOlevel():
     control = None
 
@@ -33,7 +32,6 @@ def updateQuantityOlevel():
     return render_template("updateQuantityOlevel.html", control=control)
 
 @app.route('/addDrug', methods=['GET', 'POST'])
-
 def addDrug():
     if request.method == 'POST':
         drugName = request.form.get('drugName')
@@ -51,6 +49,28 @@ def addDrug():
             return render_template('addDrug.html', error=result["message"])
 
     return render_template('addDrug.html')
-    
+
+@app.route('/deleteDrugs', methods=['GET', 'POST'])
+def deleteDrugs():
+    message = ''
+    success = False
+
+    if request.method == 'POST':
+        drug_ids_raw = request.form.get('drugIds')  
+        if drug_ids_raw:
+            # Clean and split into a list
+            drug_ids = [id.strip() for id in drug_ids_raw.split(',') if id.strip().isdigit()]
+            if drug_ids:
+                result = eradicateDrugs(drug_ids)
+                message = result['message']
+                success = result['success']
+            else:
+                message = 'No valid drug IDs provided.'
+        else:
+            message = 'No drug IDs submitted.'
+
+    return render_template('deleteDrugs.html', message=message, success=success)
+
+
 if __name__ == "__main__":
     app.run(debug=True)

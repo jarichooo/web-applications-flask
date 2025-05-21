@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Multiple Drugs</title>
+</head>
+<body>
+    <h2>Delete Drugs from Inventory</h2>
+    
+    <form method="POST" action="{{ url_for('deleteDrugs') }}">
+        <label for="drugIds">Enter Drug IDs to Delete (comma-separated):</label>
+        <input type="text" id="drugIds" name="drugIds" placeholder="" required>
+        <input type="submit" value="Delete Drugs">
+    </form>
+
+    {% if message %}
+        <div class="message" style="color: {{ 'green' if success else 'red' }};">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <div class="back-button">
+        <a href="{{ url_for('index') }}">
+            <button type="button">← Back to Home</button>
+        </a>
+    </div>
+</body>
+</html>
