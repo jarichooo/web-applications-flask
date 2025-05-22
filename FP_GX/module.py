@@ -18,21 +18,22 @@ def create_connection():
         print(f"Error connecting to MariaDB: {e}")
         return None
 
-def fetch_drugs():
+def fetchDrugs():
     try:
-        connection = create_connection()
+        connection = create_connection() 
         if connection:
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM drugs")
+            cursor.execute("SELECT d.drugId, d.drugName, d.drugType, i.quantity, d.unitPrice FROM drugs d JOIN inventory i ON d.drugId = i.drugId")
             drugs = cursor.fetchall()
 
             result = []
-            for i, drug in enumerate(drugs, start=1):
+            for drug in drugs:
                 result.append({
-                    "id": i,
+                    "id": drug[0],
                     "name": drug[1],
                     "type": drug[2],
-                    "price": drug[5]
+                    "quantity": drug[3],
+                    "unitPrice": drug[4]
                 })
             return result
     except Error as e:
@@ -60,7 +61,7 @@ def checkInventory():
             for i in range(min(len(drugs), len(inventory))):
                 drug = drugs[i]
                 results.append({
-                    "id": i + 1,
+                    "id": drug[0],
                     "name": drug[1],
                     "type": drug[2],
                     "price": drug[5],
@@ -76,30 +77,38 @@ def checkInventory():
         if connection:
             connection.close()
 
-def update_inventory(inventoryId, quantity, reorderLevel, unitPrice):
+def updateInventory(inventoryId, quantity, reorderLevel, unitPrice):
     try:
         connection = create_connection()
         if connection:
             cursor = connection.cursor()
-            
-            # Initialize updated flags
+
             quantity_updated = 0
             reorder_updated = 0
             unitPrice_updated = 0
-            
-            # Update quantity
-            if quantity is not None:
-                cursor.execute("UPDATE inventory SET quantity = %s WHERE inventoryId = %s", (quantity, inventoryId))
+
+            # Update quantity if it's not None and not an empty string
+            if quantity not in [None, ""]:
+                cursor.execute(
+                    "UPDATE inventory SET quantity = %s WHERE inventoryId = %s",
+                    (quantity, inventoryId)
+                )
                 quantity_updated = cursor.rowcount
 
-            # Update reorder level
-            if reorderLevel is not None:
-                cursor.execute("UPDATE inventory SET reorderLevel = %s WHERE inventoryId = %s", (reorderLevel, inventoryId))
+            # Update reorder level if it's not None and not an empty string
+            if reorderLevel not in [None, ""]:
+                cursor.execute(
+                    "UPDATE inventory SET reorderLevel = %s WHERE inventoryId = %s",
+                    (reorderLevel, inventoryId)
+                )
                 reorder_updated = cursor.rowcount
 
-            # Update Unit price in the drugs table
-            if unitPrice is not None:
-                cursor.execute("UPDATE drugs SET unitPrice = %s WHERE drugId = %s", (unitPrice, inventoryId))
+            # Update unit price if it's not None and not an empty string
+            if unitPrice not in [None, ""]:
+                cursor.execute(
+                    "UPDATE drugs SET unitPrice = %s WHERE drugId = %s",
+                    (unitPrice, inventoryId)
+                )
                 unitPrice_updated = cursor.rowcount
 
             connection.commit()
@@ -129,25 +138,26 @@ def addDrugs(drugName, drugType, description, manufacturer, unitPrice, expiryDat
         connection = create_connection()
         if connection:
             cursor = connection.cursor()
-            
-            cursor.execute("SELECT COUNT(*) FROM drugs")
-            count = cursor.fetchone()[0]
-            
-            new_drugId = count + 1
-            
-            # Insert the new drug with the manually set drugId
-            cursor.execute("""INSERT INTO drugs (drugId, drugName, drugType, description, manufacturer, unitPrice, expiryDate)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)""",
-                (new_drugId, drugName, drugType, description, manufacturer, unitPrice, expiryDate))
+
+            cursor.execute("SELECT MAX(drugId) FROM drugs")
+            max_id = cursor.fetchone()[0]
+            new_drugId = (max_id or 0) + 1
+
+            cursor.execute("""
+                INSERT INTO drugs (drugId, drugName, drugType, description, manufacturer, unitPrice, expiryDate)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (new_drugId, drugName, drugType, description, manufacturer, unitPrice, expiryDate))
             connection.commit()
 
-            # Insert initial inventory record for the new drug
-            cursor.execute("INSERT INTO inventory (inventoryId, quantity, reorderLevel) VALUES (%s, %s, %s)", (new_drugId, 0, 10))
+            cursor.execute("""
+                INSERT INTO inventory (inventoryId, quantity, reorderLevel)
+                VALUES (%s, %s, %s)
+            """, (new_drugId, 0, 10))
             connection.commit()
-            
+
             return {
                 "success": True,
-                "message": "Drug added successfully with drugId " + str(new_drugId)
+                "message": f"Drug added successfully with drugId {new_drugId}"
             }
 
     except Error as e:
@@ -186,6 +196,157 @@ def eradicateDrugs(drugIds):
             "success": False,
             "message": f"Error deleting inventory: {e}"
         }
+    finally:
+        if connection:
+            connection.close()
+
+
+def createAccount(lastName, firstName, email, password):
+    try:
+        connection = create_connection()
+        if connection:
+            cursor = connection.cursor()
+
+            cursor.execute("SELECT MAX(userId) FROM users")
+            max_id = cursor.fetchone()[0]
+            new_userId = (max_id or 0) + 1
+
+            cursor.execute("INSERT INTO users (userId, firstName, lastName, email, password) VALUES ( %s ,%s, %s, %s, %s)", (new_userId, lastName, firstName, email, password))
+            connection.commit()
+
+            return {
+                "success": True,
+                "message": f"Account created successfully with userId {new_userId}"
+            }
+
+    except Error as e:
+        return {
+            "success": False,
+            "message": f"Error creating account: {e}"
+        }
+    finally:
+        if connection:
+            connection.close()
+
+def logIn(email, password):
+    try:
+        connection = create_connection()
+        if connection:
+            cursor = connection.cursor()
+            
+            # Check if the user is an admin
+            cursor.execute("SELECT * FROM admin WHERE email = %s AND password = %s", (email, password))
+            admin = cursor.fetchone()
+
+            if admin:
+                return {
+                    "userId": admin[0],
+                    "firstName": admin[1],
+                    "lastName": admin[2],
+                    "email": admin[3],
+                    "password": admin[4],
+                    "userType":"admin"
+                } 
+            # Check if the user is a regular user
+            cursor.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email, password))
+            user = cursor.fetchone()
+
+            if user:
+                return {
+                    "userId": user[0],
+                    "firstName": user[1],
+                    "lastName": user[2],
+                    "email": user[3],
+                    "password": user[4],
+                    "userType":"user"
+                }
+            else:
+                return None
+    except Error as e:
+        return None
+    finally:
+        if connection:
+            connection.close()
+
+
+def submitPurchase(userId, drugId, quantity):
+    try:
+        connection = create_connection()
+        if connection:
+            cursor = connection.cursor()
+
+            # Check if the drug is in stock and get unitPrice
+            cursor.execute("SELECT quantity, unitPrice FROM inventory JOIN drugs ON inventory.drugId = drugs.drugId WHERE inventory.inventoryId = %s", (drugId,))
+            result = cursor.fetchone()
+            
+            if result:
+                current_quantity, unit_price = result
+                if current_quantity >= quantity:
+                    # Update the inventory
+                    cursor.execute("UPDATE inventory SET quantity = quantity - %s WHERE inventoryId = %s", (quantity, drugId))
+                    connection.commit()
+
+                    # Calculate total price
+                    total = quantity * float(unit_price)
+
+                    # Insert into purchase history with total
+                    cursor.execute(
+                        "INSERT INTO purchases (quantityPurchased, purchaseDate, userId, drugId, total) VALUES (%s, CURDATE(), %s, %s, %s)",
+                        (quantity, userId, drugId, total)
+                    )
+                    connection.commit()
+
+                    return {
+                        "success": True,
+                        "message": "Purchase successful."
+                    }
+                else:
+                    return {
+                        "success": False,
+                        "message": "Not enough stock available."
+                    }
+            else:
+                return {
+                    "success": False,
+                    "message": "Drug not found."
+                }
+
+    except Error as e:
+        return {
+            "success": False,
+            "message": f"Error processing purchase: {e}"
+        }
+    finally:
+        if connection:
+            connection.close()
+
+def fetchPurchaseHistory(userId):
+    try:
+        connection = create_connection()
+        if connection:
+            cursor = connection.cursor()
+
+            cursor.execute("""
+                SELECT p.quantityPurchased, p.purchaseDate, d.drugName, d.unitPrice, p.total
+                FROM purchases p
+                JOIN drugs d ON p.drugId = d.drugId
+                WHERE p.userId = %s
+            """, (userId,))
+            purchases = cursor.fetchall()
+
+            result = []
+            for purchase in purchases:
+                result.append({
+                    "quantityPurchased": purchase[0],
+                    "purchaseDate": purchase[1],
+                    "drugName": purchase[2],
+                    "unitPrice": purchase[3],
+                    "total": purchase[4]
+                })
+            return result
+
+    except Error as e:
+        return {"error": str(e)}
     finally:
         if connection:
             connection.close()

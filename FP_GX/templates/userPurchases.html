@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .back-button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Purchase History</h2>
+
+    {% if purchases %}
+    <table>
+        <thead>
+            <tr>
+                <th>Drug Name</th>
+                <th>Unit Price (₱)</th>
+                <th>Quantity Purchased</th>
+                <th>Total (₱)</th>
+                <th>Purchase Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase in purchases %}
+            <tr>
+                <td>{{ purchase.drugName }}</td>
+                <td>₱ {{ "%.2f"|format(purchase.unitPrice) }}</td>
+                <td>{{ purchase.quantityPurchased }}</td>
+                <td>₱ {{ "%.2f"|format(purchase.total) }}</td>
+                <td>{{ purchase.purchaseDate }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No purchases found.</p>
+    {% endif %}
+
+    <div class="back-button">
+        <a href="{{ url_for('userPage') }}">← Back to User Page</a>
+    </div>
+
+</body>
+</html>

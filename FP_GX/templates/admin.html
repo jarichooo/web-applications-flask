@@ -23,6 +23,12 @@
         <a href="{{ url_for('deleteDrugs') }}">
             <button style="padding: 8px 16px; font-size: 14px;">remove drugs</button>
         </a>
+        <a href="{{ url_for('logout') }}">
+            <button style="padding: 8px 16px; font-size: 14px;">log out</button>
+        </a>
+        <a href="{{ url_for('userPurchases') }}">
+            <button style="padding: 8px 16px; font-size: 14px;">Check purchases</button>
+        </a>
     </div>
 
     <table>
@@ -40,7 +46,7 @@
                     <td>{{ drug.id }}</td>
                     <td>{{ drug.name }}</td>
                     <td>{{ drug.type }}</td>
-                    <td>₱ {{ drug.price }}</td>
+                    <td>₱ {{ drug.unitPrice }}</td>
                 </tr>
             {% endfor %}
         </tbody>

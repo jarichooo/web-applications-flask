@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Purchase Page</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <h2>Welcome, {{ user.firstName }} {{ user.lastName }}!</h2>
+    <h3>Purchase medicine</h3>
+    <form method="POST" action="{{ url_for('submitPurchaseRoute') }}">
+        <label for="drugId">Drug ID:</label><br>
+        <input type="text" id="drugId" name="drugId" required><br><br>
+
+        <label for="quantity">Quantity:</label><br>
+        <input type="number" id="quantity" name="quantity" required><br><br>
+
+        <button type="submit">Purchase</button>
+    </form>
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <h3>Available Drugs</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Drug ID</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price (₱)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for drug in drugs %}
+            <tr>
+                <td>{{ drug.id }}</td>
+                <td>{{ drug.name }}</td>
+                <td>{{ drug.quantity }}</td>
+                <td>₱ {{ drug.unitPrice }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

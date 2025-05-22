@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>User Registration</title>
+</head>
+<body>
+    <h2>Create Account</h2>
+    <form method="POST" action="{{ url_for('createUser') }}">
+    <label for="lastName">Last Name:</label><br />
+    <input type="text" id="lastName" name="lastName" maxlength="100" required /><br /><br />
+
+    <label for="firstName">First Name:</label><br />
+    <input type="text" id="firstName" name="firstName" maxlength="100" required /><br /><br />
+
+    <label for="email">Email:</label><br />
+    <input type="email" id="email" name="email" maxlength="150" required /><br /><br />
+
+    <label for="password">Password:</label><br />
+    <input type="password" id="password" name="password" maxlength="50" required /><br /><br />
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <button type="submit">Register</button>
+</form>
+</body>
+</html>

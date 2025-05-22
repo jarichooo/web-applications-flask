@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>Add New Drug</h2>
-    <form method="POST">
+    <form method="POST" action="{{ url_for('addDrug') }}">
         <label>Drug Name:</label><br>
         <input type="text" id="drugName" name="drugName" required><br><br>
 
@@ -20,7 +20,7 @@
         <input type="text" id="manufacturer" name="manufacturer" required><br><br>
 
         <label>Unit Price:</label><br>
-        <input type="number" id="unitPrice" step="0.01" name="unitPrice" required><br><br>
+        <input type="number" id="unitPrice" name="unitPrice" required><br><br>
 
         <label>Expiry Date:</label><br>
         <input type="date" id="expiryDate" name="expiryDate" required><br><br>
@@ -28,6 +28,6 @@
         <button type="submit">Add Drug</button>
     </form>
     <br>
-    <a href="{{ url_for('index') }}">← Back to Home</a>
+    <a href="{{ url_for('admin') }}">← Back to Home</a>
 </body>
 </html>
