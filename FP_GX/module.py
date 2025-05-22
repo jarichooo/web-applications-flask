@@ -350,3 +350,35 @@ def fetchPurchaseHistory(userId):
     finally:
         if connection:
             connection.close()
+
+def fetchUserPurchase(userId):
+    try:
+        connection = create_connection()
+        if connection:
+            cursor = connection.cursor()
+            cursor.execute("""
+                SELECT p.quantityPurchased, p.purchaseDate, d.drugName, d.unitPrice, p.total
+                FROM purchases p
+                JOIN drugs d ON p.drugId = d.drugId
+                WHERE p.userId = %s
+                ORDER BY p.purchaseDate DESC
+                LIMIT 1
+            """, (userId,))
+            purchase = cursor.fetchone()
+
+            if purchase:
+                return {
+                    "quantityPurchased": purchase[0],
+                    "purchaseDate": purchase[1],
+                    "drugName": purchase[2],
+                    "unitPrice": purchase[3],
+                    "total": purchase[4]
+                }
+            else:
+                return None
+
+    except Error as e:
+        return {"error": str(e)}
+    finally:
+        if connection:
+            connection.close()

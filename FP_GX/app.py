@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
-from module import fetchDrugs, checkInventory, updateInventory, addDrugs, eradicateDrugs, logIn, createAccount, submitPurchase, fetchPurchaseHistory
+from module import fetchDrugs, checkInventory, updateInventory, addDrugs, eradicateDrugs, logIn, createAccount, submitPurchase, fetchPurchaseHistory, fetchUserPurchase
 
 app = Flask(__name__)
 app.secret_key = os.getenv("DB_SUPERSECRET_KEY")
@@ -164,6 +164,15 @@ def userPurchases():
 
     purchases = fetchPurchaseHistory(user["userId"])
     return render_template('userPurchases.html', purchases=purchases)
+
+@app.route('/userCart', methods=['GET'])
+def userCart():
+    user = session.get("user")
+    if not user:
+        return redirect(url_for("login_get"))
+
+    myPurchase = fetchUserPurchase(user["userId"])
+    return render_template('userCart.html', purchases=myPurchase)
 
 if __name__ == "__main__":
     app.run(debug=True)

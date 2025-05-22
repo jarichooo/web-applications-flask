@@ -22,6 +22,11 @@
 <body>
     <h2>Welcome, {{ user.firstName }} {{ user.lastName }}!</h2>
     <h3>Purchase medicine</h3>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <a href="{{ url_for('userCart') }}">
+            <button style="padding: 8px 16px; font-size: 14px;">Check your purchases</button>
+        </a>
+    </div>
     <form method="POST" action="{{ url_for('submitPurchaseRoute') }}">
         <label for="drugId">Drug ID:</label><br>
         <input type="text" id="drugId" name="drugId" required><br><br>
