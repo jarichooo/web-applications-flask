@@ -1,55 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Drug Inventory</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        form { margin-top: 20px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Drug Inventory - Pharmacy ni Renzzo</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body>
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-        <h1>Pharmacy ni renzzo</h1>
-        <a href="{{ url_for('inventory') }}">
-            <button style="padding: 8px 16px; font-size: 14px;">Check Inventory</button>
-        </a>
-        <a href="{{ url_for('addDrug') }}">
-            <button style="padding: 8px 16px; font-size: 14px;">Add drugs</button>
-        </a>
-        <a href="{{ url_for('deleteDrugs') }}">
-            <button style="padding: 8px 16px; font-size: 14px;">remove drugs</button>
-        </a>
-        <a href="{{ url_for('logout') }}">
-            <button style="padding: 8px 16px; font-size: 14px;">log out</button>
-        </a>
-        <a href="{{ url_for('userPurchases') }}">
-            <button style="padding: 8px 16px; font-size: 14px;">Check purchases</button>
-        </a>
+<body class="bg-gray-100 min-h-screen p-6">
+  <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6 space-y-6">
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-bold text-indigo-700">JR2 Pharmacy</h1>
+      <div class="flex gap-2 flex-wrap justify-end">
+        <a href="{{ url_for('inventory') }}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Check Inventory</a>
+        <a href="{{ url_for('addDrug') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Add Drugs</a>
+        <a href="{{ url_for('deleteDrugs') }}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">Remove Drugs</a>
+        <a href="{{ url_for('userPurchases') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Check Purchases</a>
+        <a href="{{ url_for('logout') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Log Out</a>
+      </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Price</th>
-            </tr>
+    <div class="overflow-x-auto mt-6">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+          </tr>
         </thead>
-        <tbody>
-            {% for drug in drugs %}
-                <tr>
-                    <td>{{ drug.id }}</td>
-                    <td>{{ drug.name }}</td>
-                    <td>{{ drug.type }}</td>
-                    <td>₱ {{ drug.unitPrice }}</td>
-                </tr>
-            {% endfor %}
+        <tbody class="bg-white divide-y divide-gray-200">
+          {% for drug in drugs %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ drug.id }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ drug.name }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ drug.type }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₱ {{ drug.unitPrice }}</td>
+            </tr>
+          {% endfor %}
         </tbody>
-    </table>
+      </table>
+    </div>
+  </div>
 </body>
 </html>

@@ -3,31 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <title>Add New Drug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            background-color: #fff;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0b5ed7;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2>Add New Drug</h2>
-    <form method="POST" action="{{ url_for('addDrug') }}">
-        <label>Drug Name:</label><br>
-        <input type="text" id="drugName" name="drugName" required><br><br>
+    <div class="container">
+        <h2>Add New Drug</h2>
+        <form method="POST" action="{{ url_for('addDrug') }}">
+            <label for="drugName">Drug Name:</label>
+            <input type="text" id="drugName" name="drugName" required>
 
-        <label>Type:</label><br>
-        <input type="text" id="drugType" name="drugType" required><br><br>
+            <label for="drugType">Type:</label>
+            <input type="text" id="drugType" name="drugType" required>
 
-        <label>Description:</label><br>
-        <textarea name="description" id="description" required></textarea><br><br>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
 
-        <label>Manufacturer:</label><br>
-        <input type="text" id="manufacturer" name="manufacturer" required><br><br>
+            <label for="manufacturer">Manufacturer:</label>
+            <input type="text" id="manufacturer" name="manufacturer" required>
 
-        <label>Unit Price:</label><br>
-        <input type="number" id="unitPrice" name="unitPrice" required><br><br>
+            <label for="unitPrice">Unit Price:</label>
+            <input type="number" id="unitPrice" name="unitPrice" required>
 
-        <label>Expiry Date:</label><br>
-        <input type="date" id="expiryDate" name="expiryDate" required><br><br>
+            <label for="expiryDate">Expiry Date:</label>
+            <input type="date" id="expiryDate" name="expiryDate" required>
 
-        <button type="submit">Add Drug</button>
-    </form>
-    <br>
-    <a href="{{ url_for('admin') }}">← Back to Home</a>
+            <button type="submit">Add Drug</button>
+        </form>
+        <a href="{{ url_for('admin') }}">← Back to Home</a>
+    </div>
 </body>
 </html>

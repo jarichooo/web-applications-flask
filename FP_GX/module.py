@@ -361,7 +361,7 @@ def fetchUserPurchase(userId):
                 FROM purchases p
                 JOIN drugs d ON p.drugId = d.drugId
                 WHERE p.userId = %s
-                ORDER BY p.purchaseDate DESC
+                ORDER BY p.purchaseId DESC
                 LIMIT 1
             """, (userId,))
             purchase = cursor.fetchone()
@@ -371,8 +371,8 @@ def fetchUserPurchase(userId):
                     "quantityPurchased": purchase[0],
                     "purchaseDate": purchase[1],
                     "drugName": purchase[2],
-                    "unitPrice": purchase[3],
-                    "total": purchase[4]
+                    "unitPrice": float(purchase[3]),
+                    "total": float(purchase[4])
                 }
             else:
                 return None

@@ -1,68 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Purchase History</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-        }
-        h2 {
-            color: #333;
-        }
-        table {
-            width: 90%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .back-button {
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Purchase History</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up {
+      animation: fadeInUp 1s ease-in-out both;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-green-100 to-teal-200 min-h-screen flex flex-col items-center p-8">
 
-    <h2>Purchase History</h2>
+  <header class="w-full max-w-5xl mb-6 flex justify-between items-center fade-in-up">
+    <h2 class="text-3xl font-extrabold text-green-800">🛒 Purchase History</h2>
+    <a href="{{ url_for('admin') }}" class="flex items-center bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition duration-300">
+      ← Back
+    </a>
+  </header>
+
+  <main class="w-full max-w-5xl bg-white rounded-xl shadow-xl p-6 fade-in-up">
 
     {% if purchases %}
-    <table>
-        <thead>
-            <tr>
-                <th>Drug Name</th>
-                <th>Unit Price (₱)</th>
-                <th>Quantity Purchased</th>
-                <th>Total (₱)</th>
-                <th>Purchase Date</th>
-            </tr>
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto bg-white border border-gray-300 rounded-lg">
+        <thead class="bg-green-200 text-green-900 text-sm uppercase tracking-wider">
+          <tr>
+            <th class="py-3 px-4 text-left border-b">Drug Name</th>
+            <th class="py-3 px-4 text-left border-b">Unit Price (₱)</th>
+            <th class="py-3 px-4 text-left border-b">Quantity Purchased</th>
+            <th class="py-3 px-4 text-left border-b">Total (₱)</th>
+            <th class="py-3 px-4 text-left border-b">Purchase Date</th>
+          </tr>
         </thead>
         <tbody>
-            {% for purchase in purchases %}
-            <tr>
-                <td>{{ purchase.drugName }}</td>
-                <td>₱ {{ "%.2f"|format(purchase.unitPrice) }}</td>
-                <td>{{ purchase.quantityPurchased }}</td>
-                <td>₱ {{ "%.2f"|format(purchase.total) }}</td>
-                <td>{{ purchase.purchaseDate }}</td>
-            </tr>
-            {% endfor %}
+          {% for purchase in purchases %}
+          <tr class="border-b border-gray-200 hover:bg-green-50 transition duration-300">
+            <td class="py-2 px-4">{{ purchase.drugName }}</td>
+            <td class="py-2 px-4">₱ {{ "%.2f"|format(purchase.unitPrice) }}</td>
+            <td class="py-2 px-4">{{ purchase.quantityPurchased }}</td>
+            <td class="py-2 px-4">₱ {{ "%.2f"|format(purchase.total) }}</td>
+            <td class="py-2 px-4">{{ purchase.purchaseDate }}</td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
+      </table>
+    </div>
     {% else %}
-        <p>No purchases found.</p>
+      <p class="text-gray-600 text-lg mt-4 fade-in-up">No purchases found.</p>
     {% endif %}
 
-    <div class="back-button">
-        <a href="{{ url_for('userPage') }}">← Back to User Page</a>
-    </div>
+  </main>
 
 </body>
 </html>

@@ -3,26 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <title>Delete Multiple Drugs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            background-color: #fff;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #c82333;
+        }
+
+        .message {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .back-button {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .back-button button {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .back-button button:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
 </head>
 <body>
-    <h2>Delete Drugs from Inventory</h2>
-    
-    <form method="POST" action="{{ url_for('deleteDrugs') }}">
-        <label for="drugIds">Enter Drug IDs to Delete (comma-separated):</label>
-        <input type="text" id="drugIds" name="drugIds" placeholder="" required>
-        <input type="submit" value="Delete Drugs">
-    </form>
+    <div class="container">
+        <h2>Delete Drugs from Inventory</h2>
 
-    {% if message %}
-        <div class="message" style="color: {{ 'green' if success else 'red' }};">
-            {{ message }}
+        <form method="POST" action="{{ url_for('deleteDrugs') }}">
+            <label for="drugIds">Enter Drug IDs to Delete (comma-separated):</label>
+            <input type="text" id="drugIds" name="drugIds" required>
+            <input type="submit" value="Delete Drugs">
+        </form>
+
+        {% if message %}
+            <div class="message" style="color: {{ 'green' if success else 'red' }};">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        <div class="back-button">
+            <a href="{{ url_for('admin') }}">
+                <button type="button">← Back to Home</button>
+            </a>
         </div>
-    {% endif %}
-
-    <div class="back-button">
-        <a href="{{ url_for('admin') }}">
-            <button type="button">← Back to Home</button>
-        </a>
     </div>
 </body>
 </html>

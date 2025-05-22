@@ -1,70 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>userCart</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-        }
-        h2 {
-            color: #333;
-        }
-        table {
-            width: 90%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .back-button {
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>userCart</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up {
+      animation: fadeInUp 1s ease-in-out both;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-green-100 to-teal-200 min-h-screen flex flex-col items-center p-8">
 
-    <h2>Your purchases</h2>
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-        <a href="{{ url_for('logout') }}">
-            <button style="padding: 8px 16px; font-size: 14px;">Log out</button>
-        </a>
-    </div>
-        {% if purchases %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Drug Name</th>
-                    <th>Unit Price (₱)</th>
-                    <th>Quantity Purchased</th>
-                    <th>Total (₱)</th>
-                    <th>Purchase Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ purchases.drugName }}</td>
-                    <td>₱ {{ "%.2f"|format(purchases.unitPrice) }}</td>
-                    <td>{{ purchases.quantityPurchased }}</td>
-                    <td>₱ {{ "%.2f"|format(purchases.total) }}</td>
-                    <td>{{ purchases.purchaseDate }}</td>
-                </tr>
-            </tbody>
-        </table>
-        {% else %}
-            <p>No purchases found.</p>
-        {% endif %}
+  <header class="w-full max-w-5xl mb-6 flex justify-between items-center fade-in-up">
+    <h2 class="text-3xl font-extrabold text-green-800">Your purchases</h2>
+    <a href="{{ url_for('logout') }}">
+      <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition duration-300 text-sm">
+        Log out
+      </button>
+    </a>
+  </header>
 
-    <div class="back-button">
-        <a href="{{ url_for('userPage') }}">← Back to User Page</a>
+  <main class="w-full max-w-5xl bg-white rounded-xl shadow-xl p-6 fade-in-up">
+
+    {% if purchases %}
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto bg-white border border-gray-300 rounded-lg">
+        <thead class="bg-green-200 text-green-900 text-sm uppercase tracking-wider">
+          <tr>
+            <th class="py-3 px-4 text-left border-b">Drug Name</th>
+            <th class="py-3 px-4 text-left border-b">Unit Price (₱)</th>
+            <th class="py-3 px-4 text-left border-b">Quantity Purchased</th>
+            <th class="py-3 px-4 text-left border-b">Total</th>
+            <th class="py-3 px-4 text-left border-b">Purchase Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-200 hover:bg-green-50 transition duration-300">
+            <td class="py-2 px-4">{{ purchases.drugName }}</td>
+            <td class="py-2 px-4">₱ {{ purchases.unitPrice }}</td>
+            <td class="py-2 px-4">{{ purchases.quantityPurchased }}</td>
+            <td class="py-2 px-4">₱ {{ purchases.total }}</td>
+            <td class="py-2 px-4">{{ purchases.purchaseDate }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    {% else %}
+      <p class="text-gray-600 text-lg mt-4 fade-in-up">No purchases found.</p>
+    {% endif %}
+
+  </main>
+
+  <footer class="w-full max-w-5xl mt-6 fade-in-up">
+    <a href="{{ url_for('userPage') }}" class="text-green-700 hover:underline">← Back to User Page</a>
+  </footer>
 
 </body>
 </html>

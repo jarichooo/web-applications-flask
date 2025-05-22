@@ -1,49 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Inventory Check</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .error { color: red; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stock Control - JR2 Drug Inventory</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body>
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-        <h1>Stock Control</h1>
-        <a href="{{ url_for('updateQuantityOlevel') }}">
-            <button style="padding: 8px 16px; font-size: 14px;">Update Inventory</button>
-        </a>
+<body class="bg-gray-100 min-h-screen p-6">
+  <div class="max-w-7xl mx-auto bg-white rounded-lg shadow-lg p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-indigo-700">Stock Control</h1>
+      <a href="{{ url_for('updateQuantityOlevel') }}">
+        <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded">
+          Update Inventory
+        </button>
+      </a>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Reorder Level</th>
-            </tr>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-200 rounded">
+        <thead class="bg-indigo-100">
+          <tr>
+            <th class="py-2 px-4 border-b border-gray-300">ID</th>
+            <th class="py-2 px-4 border-b border-gray-300">Name</th>
+            <th class="py-2 px-4 border-b border-gray-300">Type</th>
+            <th class="py-2 px-4 border-b border-gray-300">Price</th>
+            <th class="py-2 px-4 border-b border-gray-300">Quantity</th>
+            <th class="py-2 px-4 border-b border-gray-300">Reorder Level</th>
+          </tr>
         </thead>
         <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.type }}</td>
-                <td>₱{{ item.price }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.reorderLevel }}</td>
-            </tr>
-            {% endfor %}
+          {% for item in items %}
+          <tr class="border-b border-gray-200">
+            <td class="py-2 px-4">{{ item.id }}</td>
+            <td class="py-2 px-4">{{ item.name }}</td>
+            <td class="py-2 px-4">{{ item.type }}</td>
+            <td class="py-2 px-4">₱{{ item.price }}</td>
+            <td class="py-2 px-4">{{ item.quantity }}</td>
+            <td class="py-2 px-4">{{ item.reorderLevel }}</td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
+      </table>
+    </div>
 
-    <br>
-    <a href="{{ url_for('admin') }}">← Back to Home</a>
+    <div class="mt-6">
+      <a href="{{ url_for('admin') }}" 
+         class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded">
+        ← Back to Home
+      </a>
+    </div>
+  </div>
 </body>
 </html>

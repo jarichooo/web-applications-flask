@@ -1,66 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>User Purchase Page</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 80%;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #eee;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>User Purchase Page - JR2 Drug Inventory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Welcome, {{ user.firstName }} {{ user.lastName }}!</h2>
-    <h3>Purchase medicine</h3>
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-        <a href="{{ url_for('userCart') }}">
-            <button style="padding: 8px 16px; font-size: 14px;">Check your purchases</button>
-        </a>
+<body class="bg-gradient-to-br from-green-100 to-teal-200 min-h-screen flex flex-col items-center p-8">
+
+  <!-- Main content -->
+  <main class="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold text-gray-800">Buy your Meds</h2>
+      <a href="{{ url_for('userCart') }}">
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+          Check purchases
+        </button>
+      </a>
     </div>
-    <form method="POST" action="{{ url_for('submitPurchaseRoute') }}">
-        <label for="drugId">Drug ID:</label><br>
-        <input type="text" id="drugId" name="drugId" required><br><br>
 
-        <label for="quantity">Quantity:</label><br>
-        <input type="number" id="quantity" name="quantity" required><br><br>
+    <form method="POST" action="{{ url_for('submitPurchaseRoute') }}" class="space-y-4">
+      <div>
+        <label for="drugId" class="block text-gray-700 font-medium">Drug ID:</label>
+        <input type="text" id="drugId" name="drugId" required class="w-full border border-gray-300 rounded px-4 py-2 mt-1">
+      </div>
 
-        <button type="submit">Purchase</button>
+      <div>
+        <label for="quantity" class="block text-gray-700 font-medium">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required class="w-full border border-gray-300 rounded px-4 py-2 mt-1">
+      </div>
+
+      <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
+        Purchase
+      </button>
     </form>
 
     {% if error %}
-    <p style="color:red;">{{ error }}</p>
+      <p class="text-red-600 mt-4">{{ error }}</p>
     {% endif %}
 
-    <h3>Available Drugs</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Drug ID</th>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Price (₱)</th>
-            </tr>
+    <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Available Drugs</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-200 rounded">
+        <thead class="bg-green-100">
+          <tr>
+            <th class="py-2 px-4 border-b border-gray-300">Drug ID</th>
+            <th class="py-2 px-4 border-b border-gray-300">Name</th>
+            <th class="py-2 px-4 border-b border-gray-300">Quantity</th>
+            <th class="py-2 px-4 border-b border-gray-300">Price (₱)</th>
+          </tr>
         </thead>
         <tbody>
-            {% for drug in drugs %}
-            <tr>
-                <td>{{ drug.id }}</td>
-                <td>{{ drug.name }}</td>
-                <td>{{ drug.quantity }}</td>
-                <td>₱ {{ drug.unitPrice }}</td>
-            </tr>
-            {% endfor %}
+          {% for drug in drugs %}
+          <tr class="border-b border-gray-100">
+            <td class="py-2 px-4">{{ drug.id }}</td>
+            <td class="py-2 px-4">{{ drug.name }}</td>
+            <td class="py-2 px-4">{{ drug.quantity }}</td>
+            <td class="py-2 px-4">₱ {{ drug.unitPrice }}</td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
+      </table>
+    </div>
+  </main>
 </body>
 </html>

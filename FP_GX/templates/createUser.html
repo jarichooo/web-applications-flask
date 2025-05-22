@@ -1,29 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>User Registration</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Account - JR2 Drug Inventory</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(to right, #6366f1, #a78bfa, #f472b6);
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 400px;
+    }
+  </style>
 </head>
-<body>
-    <h2>Create Account</h2>
-    <form method="POST" action="{{ url_for('createUser') }}">
-    <label for="lastName">Last Name:</label><br />
-    <input type="text" id="lastName" name="lastName" maxlength="100" required /><br /><br />
+<body class="flex items-center justify-center">
+  <div class="container bg-white rounded-3xl shadow-2xl p-8 mt-20 mb-20 text-center">
+    <h1 class="text-3xl font-extrabold text-indigo-700 mb-6">Create Account</h1>
 
-    <label for="firstName">First Name:</label><br />
-    <input type="text" id="firstName" name="firstName" maxlength="100" required /><br /><br />
+    <form method="POST" action="{{ url_for('createUser') }}" class="space-y-4 text-left">
+      <label for="lastName" class="block font-semibold text-gray-700">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        name="lastName"
+        maxlength="100"
+        required
+        class="w-full border p-2 rounded shadow"
+      />
 
-    <label for="email">Email:</label><br />
-    <input type="email" id="email" name="email" maxlength="150" required /><br /><br />
+      <label for="firstName" class="block font-semibold text-gray-700">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        name="firstName"
+        maxlength="100"
+        required
+        class="w-full border p-2 rounded shadow"
+      />
 
-    <label for="password">Password:</label><br />
-    <input type="password" id="password" name="password" maxlength="50" required /><br /><br />
+      <label for="email" class="block font-semibold text-gray-700">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        maxlength="150"
+        required
+        class="w-full border p-2 rounded shadow"
+      />
 
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
+      <label for="password" class="block font-semibold text-gray-700">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        maxlength="50"
+        required
+        class="w-full border p-2 rounded shadow"
+      />
 
-    <button type="submit">Register</button>
-</form>
+      {% if error %}
+        <p class="text-red-600 text-sm mt-2">{{ error }}</p>
+      {% endif %}
+
+      <button
+        type="submit"
+        class="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition"
+      >
+        Register
+      </button>
+    </form>
+
+    <p class="mt-6 text-gray-700 text-sm">
+      Already have an account?
+      <a href="{{ url_for('login_get') }}" class="text-indigo-700 font-semibold hover:underline">Login here</a>
+    </p>
+  </div>
 </body>
 </html>
