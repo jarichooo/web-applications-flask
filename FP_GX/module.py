@@ -139,21 +139,25 @@ def addDrugs(drugName, drugType, description, manufacturer, unitPrice, expiryDat
         if connection:
             cursor = connection.cursor()
 
-            cursor.execute("SELECT MAX(drugId) FROM drugs")
-            max_id = cursor.fetchone()[0]
-            new_drugId = (max_id or 0) + 1
-
+            # Insert into drugs table
             cursor.execute("""
-                INSERT INTO drugs (drugId, drugName, drugType, description, manufacturer, unitPrice, expiryDate)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (new_drugId, drugName, drugType, description, manufacturer, unitPrice, expiryDate))
+                INSERT INTO drugs (drugName, drugType, description, manufacturer, unitPrice, expiryDate)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (drugName, drugType, description, manufacturer, unitPrice, expiryDate))
             connection.commit()
 
+            # Get the auto-incremented drugId
+            new_drugId = cursor.lastrowid
+
+            # Insert into inventory with drugId as a foreign key
+            new_drugId = cursor.lastrowid
+
             cursor.execute("""
-                INSERT INTO inventory (inventoryId, quantity, reorderLevel)
+                INSERT INTO inventory (drugId, quantity, reorderLevel)
                 VALUES (%s, %s, %s)
             """, (new_drugId, 0, 10))
             connection.commit()
+
 
             return {
                 "success": True,
@@ -175,26 +179,31 @@ def eradicateDrugs(drugIds):
         if connection:
             cursor = connection.cursor()
             
+            # Delete from inventory where drugId in list
             format_strings = ','.join(['%s'] * len(drugIds))
-            query = f"DELETE FROM inventory WHERE inventoryID IN ({format_strings})"
+            query = f"DELETE FROM inventory WHERE drugId IN ({format_strings})"
             cursor.execute(query, tuple(drugIds))
             connection.commit()
 
-            # Use SQL IN clause to delete multiple records
-            format_strings = ','.join(['%s'] * len(drugIds))
+            # Delete from purchases where drugId in list
+            query = f"DELETE FROM purchases WHERE drugId IN ({format_strings})"
+            cursor.execute(query, tuple(drugIds))
+            connection.commit()
+            
+            # Then delete from drugs table
             query = f"DELETE FROM drugs WHERE drugId IN ({format_strings})"
             cursor.execute(query, tuple(drugIds))
             connection.commit()
 
             return {
                 "success": True,
-                "message": f"Deleted {cursor.rowcount} drug(s) with IDs: {', '.join(drugIds)}"
+                "message": f"Deleted {cursor.rowcount} drug(s) with IDs: {', '.join(map(str, drugIds))}"
             }
 
     except Error as e:
         return {
             "success": False,
-            "message": f"Error deleting inventory: {e}"
+            "message": f"Error deleting drugs: {e}"
         }
     finally:
         if connection:

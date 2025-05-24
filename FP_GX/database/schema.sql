@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS `drugs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `drugs` (
-  `drugId` int(11) NOT NULL,
+  `drugId` int(11) NOT NULL AUTO_INCREMENT,
   `drugName` varchar(100) NOT NULL,
   `drugType` varchar(50) DEFAULT NULL,
   `description` text DEFAULT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE `drugs` (
   `unitPrice` decimal(10,2) DEFAULT NULL,
   `expiryDate` date DEFAULT NULL,
   PRIMARY KEY (`drugId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,7 +60,7 @@ DROP TABLE IF EXISTS `inventory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `inventory` (
-  `inventoryId` int(11) NOT NULL,
+  `inventoryId` int(11) NOT NULL AUTO_INCREMENT,
   `drugId` int(11) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
   `reorderLevel` int(11) DEFAULT 10,
@@ -68,7 +68,7 @@ CREATE TABLE `inventory` (
   PRIMARY KEY (`inventoryId`),
   KEY `drugId` (`drugId`),
   CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`drugId`) REFERENCES `drugs` (`drugId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +90,7 @@ CREATE TABLE `purchases` (
   KEY `fk_drug` (`drugId`),
   CONSTRAINT `fk_drug` FOREIGN KEY (`drugId`) REFERENCES `drugs` (`drugId`),
   CONSTRAINT `fk_user` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,4 +120,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-23 19:53:00
+-- Dump completed on 2025-05-24 10:49:33
