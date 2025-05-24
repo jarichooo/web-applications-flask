@@ -124,7 +124,7 @@ def addDrug():
         drugType = request.form.get('drugType')
         description = request.form.get('description')
         manufacturer = request.form.get('manufacturer')
-        unitPrice = request.form.get('unitPrice')
+        unitPrice = float(request.form.get('unitPrice'))
         expiryDate = request.form.get('expiryDate')
 
         result = addDrugs(drugName, drugType, description, manufacturer, unitPrice, expiryDate)
