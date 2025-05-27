@@ -72,7 +72,7 @@ def insert_crops(cropName, fieldLocation, sowingTime):
     finally:
         connection.close()
 
-def inser_posts(title, body):
+def insert_posts(title, body):
     try:
         connection = establish_connection()
         if connection:
